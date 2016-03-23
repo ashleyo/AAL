@@ -87,8 +87,8 @@ init:
 set_pin_as_output:
 	BL PMM10 @ R0 = pin mod 10, R1 = pin div 10	
     
-    MOV R1, R1 LSL 2 @ multiply R1 by 4 to give GPIO reg offset in words
-    ADD R0, R0, R0 LSL 1 @ multiply R0 by 3 to give bit offset inside register
+    MOV R1, R1, LSL #2 @ multiply R1 by 4 to give GPIO reg offset in words
+    ADD R0, R0, R0, LSL #1 @ multiply R0 by 3 to give bit offset inside register
     	
 	LDR R3, ADD_MMGPIOBASE
 	LDR R3, [R3,R1]			@fetch and stash GPSELn, keep a working copy in R3
@@ -96,10 +96,13 @@ set_pin_as_output:
 	@LDR R2, [R3, #GPSEL2]		@fetch GPSEL2
     LDR R2, [R3]            @fetch correct GPSEL register
 	@BIC R2, R2, #0x7 << 3	@clear bits b3 b4 b5
-    MOV R1, #0x7 LSL R0
+	MOV R1, #0x7
+	MOV R1, R1, LSL R0
+    @MOV R1, #0x7, LSL R0
     BIC R2, R2, R1
 	STR R2, [R3]		    @write it back
-	ORR R2, R2, #0x1 LSL R0
+	MOV R1, #0x1	
+	ORR R2, R2, R1, LSL R0
     @ORR R2, R2, #0x1 << 3	@set b3
 	STR R2, [R3]		@write it back
     MOV PC, LR  
