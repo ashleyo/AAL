@@ -36,20 +36,11 @@ map:
 
 	LDR R3, ADD_MMGPIOBASE
 	STR R0, [R3]
-	@set a pin (21) as output
-	@Enter here with 21 in R0
 	
-	@Preserve R4-R6
-	@@@STMFD SP!, {R4-R6, LR} 		@Planning to use R4/5/6 as scratch space. Also preserve original LR
-	@@@BL PMM10		
-	LDR R3, ADD_MMGPIOBASE
-	LDR R3, [R3]			@fetch and stash GPIOBASE, keep a working copy in R3
 	
-	LDR R2, [R3, #GPSEL2]		@fetch GPSEL2
-	BIC R2, R2, #0x7 << 3	@clear bits b3 b4 b5
-	STR R2, [R3, #GPSEL2]		@write it back
-	ORR R2, R2, #0x1 << 3	@set b3
-	STR R2, [R3, #GPSEL2]		@write it back
+	MOV R0, #21
+	MOV R1, #GP_OUTPUT
+	BL set_pin_direction
 					
 	MOV R0, #21
 	MOV R1, #PIN_ON
@@ -67,8 +58,7 @@ tidy_up:
 	LDR R0, [R0]
 	BL close		@ and close (deletes mmap)
 
-	@@@LDMFD SP!, {R4-R6, LR} @Pull original values from stack
-
+	
 	ADD SP, SP, #16		@restore SP
 	MOV R7, #1		@and bail
 	SWI 0
@@ -85,6 +75,33 @@ change_pin_state:
 	STREQ R2, [R3, #GPSET0]	@gpiobase+28 = GPSET0
 	STRNE R2, [R3, #GPCLR0]
 	MOV PC, LR
+
+@Enter with pin number in R0
+@Enter with GP_INPUT or GP_OUTPUT in R1
+set_pin_direction:
+	STMFD SP!, {R4, LR}
+	MOV R4, R1			@free up R1 for return from PMM10
+	
+	BL PMM10
+	
+	MOV R0, R0, LSL #2		@multiply R0 by 4 to get a register offset
+	ADD R1, R1, R1, LSL #1		@multiply R1 by 3 to get a bit offset in a register
+				
+	LDR R3, ADD_MMGPIOBASE
+	LDR R3, [R3]			@fetch and stash GPIOBASE, keep a working copy in R3
+	ADD R3, R3, R0			@roll the offest into R3 which frees up R0
+	LDR R2, [R3]			@fetch GPSELn
+	MOV R0, #GP_FSEL_MASK
+	MOV R0, R0, LSL R1		@mask into R0
+	BIC R2, R2, R0 			@clear bits
+	STR R2, [R3]			@write back
+	MOV R0, R4
+	MOV R0, R0, LSL R1
+	ORR R2, R2, R0			@set b3
+	STR R2, [R3]			@write it back	
+	LDMFD SP!, {R4, LR}
+	MOV PC, LR
+
 	
 PMM10:
 	@ Poor man's modulo 10
