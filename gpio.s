@@ -1,29 +1,32 @@
 .include "symbols.s"
-	.global main
-main:
-	STMFD SP!, {LR}	    @preserve any necessary registers
 
-	BL init
-	
-	MOV R0, #21
-	BL set_pin_as_output
-						
-	MOV R0, #21
-	MOV R1, #PIN_ON
-	BL change_pin_state	@Turn on p21
-	
-	MOV R0, #1
-	BL sleep		@wait one second
-								
-	MOV R0, #21
-	MOV R1, #PIN_OFF
-	BL change_pin_state	@turn off p21
-
-	BL clean_up
-    
-	LDMFD SP!, {LR}	    	@restore stacked registers
-	MOV R7, #1		@and bail
-	SWI 0
+@@@@@Uncomment this section for testing standalone@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@	.global main
+@main:
+@	STMFD SP!, {LR}	    @preserve any necessary registers
+@
+@	BL init
+@	
+@	MOV R0, #21
+@	BL set_pin_as_output
+@						
+@	MOV R0, #21
+@	MOV R1, #PIN_ON
+@	BL change_pin_state	@Turn on p21
+@	
+@	MOV R0, #1
+@	BL sleep		@wait one second
+@								
+@	MOV R0, #21
+@	MOV R1, #PIN_OFF
+@	BL change_pin_state	@turn off p21
+@
+@	BL clean_up
+@   
+@	LDMFD SP!, {LR}	    	@restore stacked registers
+@	MOV R7, #1		@and bail
+@	SWI 0
+@@@@@Uncomment end@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 	
 @Enter with pin number in R0
