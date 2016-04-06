@@ -100,6 +100,7 @@ set_pin_as_output:
 	ADD R0, R0, R0, LSL #1 @ multiply R0 by 3 to give bit offset inside register
 	
 	LDR R3, ADD_MMGPIOBASE
+	LDR R3, [R3]
 	ADD R3, R3, R1		@adjust R3 to point at GPSELn
 	LDR R2, [R3]	    	@fetch correct GPSEL register
 	MOV R1, #0x7
