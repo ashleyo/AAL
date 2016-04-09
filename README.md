@@ -1,5 +1,4 @@
 # AAL
-Remodelled workflow for AAL
 ## Purpose
 A pure ARMv7 Assembler library for controlling GPIO on a Raspberry Pi 3 under Raspbian
 ## Goals
@@ -10,6 +9,7 @@ A pure ARMv7 Assembler library for controlling GPIO on a Raspberry Pi 3 under Ra
 + Incomplete
 + needs root permissions as GPIO is being mapped to /dev/mem - should be possible to move this to user space
 
+##Status, Progress, Immediate Goals
 Early alpha. What's there is tested, but there is much to yet implement.
 
 The following functions are/are being implemented
@@ -18,5 +18,10 @@ The following functions are/are being implemented
 + void change_pin_state(int pin, enum ON|OFF) -
 + void clean_up() - releases resources etc
 
-set_pin_as is currently present as set_pin_as_output(int pin) - lack hardware to test input is 
+All implemented but set_pin_as is currently present as set_pin_as_output(int pin) - lack hardware to test input is 
 working right now!
+
+Tested working with pins 4,21 as o/p. Need more patch wires to make testing easier!
+Added makefile to build as shared library - tested and working from c
+
+Next: test from python using ctype

@@ -13,6 +13,7 @@ install: object
 	cp lib$(LIBNAME).so.$(BUILD) /usr/local/lib/lib$(LIBNAME).so.$(BUILD)
 	ln -s /usr/local/lib/lib$(LIBNAME).so.$(BUILD) /usr/local/lib/lib$(LIBNAME).so.$(VERS)
 	ln -s /usr/local/lib/lib$(LIBNAME).so.$(BUILD) /usr/local/lib/lib$(LIBNAME).so
+	#ldconfig needed to make library cache up to date and avoid runtime error
 	ldconfig
 
 test: install
