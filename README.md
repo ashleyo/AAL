@@ -9,7 +9,7 @@ A pure ARMv7 Assembler library for controlling GPIO on a Raspberry Pi 3 under Ra
 + Incomplete
 + needs root permissions as GPIO is being mapped to /dev/mem - should be possible to move this to user space
 
-##Status, Progress, Immediate Goals
+## Status, Progress, Immediate Goals
 Early alpha. What's there is tested, but there is much to yet implement.
 
 The following functions are/are being implemented
