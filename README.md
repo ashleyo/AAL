@@ -25,3 +25,10 @@ Tested working with pins 4,21 as o/p. Need more patch wires to make testing easi
 Added makefile to build as shared library - tested and working from c
 
 Next: test from python using ctype
+
+## Installation and use
+The library is intended to be installed as a shared library and linked as such. Installation is best achieved by using the included makefile and `make install`. Note that this will require admin priviliges so probably `sudo make install` in practice. 
+
+In use, the gcc link stage command should include `-lgpiot` to reference the shared library: notice that neither the 'lib' prefix nor the file extension (both are assumed) should be provided to gcc. 
+
+To use any of the symbolic names and enums in your own code you would also want to `.include symbols.s` in your own source file.
